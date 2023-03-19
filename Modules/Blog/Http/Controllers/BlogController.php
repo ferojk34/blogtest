@@ -4,8 +4,13 @@ namespace Modules\Blog\Http\Controllers;
 
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Http\JsonResponse;
+use Modules\Blog\Transformers\BlogResource;
 use Modules\Blog\Repositories\BlogRepository;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Modules\Core\Http\Controllers\BaseController;
+use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class BlogController extends BaseController
 {
@@ -15,6 +20,17 @@ class BlogController extends BaseController
     {
         $this->repository = $repository;
     }
+
+    public function resource(object $blog): JsonResource
+    {
+        return new BlogResource($blog);
+    }
+
+    public function collection(object $blog): ResourceCollection
+    {
+        return BlogResource::collection($blog);
+    }
+
     public function index(Request $request)
     {
         try {
@@ -25,28 +41,67 @@ class BlogController extends BaseController
             return $this->handleException($exception);
         }
 
-        return $this->successResponse($blogs);
+        return $this->successResponse(
+            payload: $this->collection($blogs),
+            message: $this->lang("create-success"),
+            response_code: Response::HTTP_CREATED
+        );
     }
 
-    public function store(Request $request)
+    public function storeBlog(Request $request): JsonResponse
     {
+        try {
+            $blog = $this->repository->storeBlog($request);
+        } catch (Exception $exception) {
+            return $this->handleException($exception);
+        }
+
+        return $this->successResponse(
+            payload: $this->resource($blog),
+            message: $this->lang("create-success"),
+            response_code: Response::HTTP_CREATED
+        );
     }
 
-    public function show($id)
+    public function show(int $id): JsonResponse
     {
+        try {
+            $fetched = $this->repository->fetch($id);
+        }
+        catch (Exception $exception) {
+            return $this->handleException($exception);
+        }
+
+        return $this->successResponse(
+            payload: $this->resource($fetched),
+            message: $this->lang("fetch-success")
+        );
     }
 
-    public function edit($id)
+    public function updateBlog(Request $request, int $id): JsonResponse
     {
+        try {
+            $blog = $this->repository->updateBlog($request, $id);
+        } catch (Exception $exception) {
+            return $this->handleException($exception);
+        }
+
+        return $this->successResponse(
+            payload: $this->resource($blog),
+            message: $this->lang("update-success")
+        );
     }
 
-    public function update(Request $request, $id)
+    public function destroy(int $id): JsonResponse
     {
-        //
-    }
+        try {
+            $this->repository->delete($id);
+        } catch (Exception $exception) {
+            return $this->handleException($exception);
+        }
 
-    public function destroy($id)
-    {
-        //
+        return $this->successResponseWithMessage(
+            message: $this->lang("delete-success")
+        );
     }
 }
