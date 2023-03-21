@@ -3,14 +3,14 @@
 namespace Modules\Blog\Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Modules\Blog\Entities\Blog;
 use Illuminate\Database\Eloquent\Model;
+use Modules\Blog\Database\Seeders\BlogTableSeeder;
 
 class BlogDatabaseSeeder extends Seeder
 {
     public function run(): void
     {
         Model::unguard();
-        Blog::factory()->count(200)->create();
+        $this->call(BlogTableSeeder::class);
     }
 }

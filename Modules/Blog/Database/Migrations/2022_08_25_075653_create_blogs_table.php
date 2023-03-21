@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create("blogs", function (Blueprint $table) {
             $table->id();
             $table->string("title");
-            $table->unique("slug");
+            $table->string("slug")->unique();
             $table->longText("description");
             $table->string("image")->nullable();
             $table->timestamps();

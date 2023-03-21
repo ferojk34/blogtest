@@ -43,12 +43,12 @@ class BlogController extends BaseController
 
         return $this->successResponse(
             payload: $this->collection($blogs),
-            message: $this->lang("create-success"),
+            message: "create-success",
             response_code: Response::HTTP_CREATED
         );
     }
 
-    public function storeBlog(Request $request): JsonResponse
+    public function store(Request $request): JsonResponse
     {
         try {
             $blog = $this->repository->storeBlog($request);
@@ -58,7 +58,7 @@ class BlogController extends BaseController
 
         return $this->successResponse(
             payload: $this->resource($blog),
-            message: $this->lang("create-success"),
+            message: "create-success",
             response_code: Response::HTTP_CREATED
         );
     }
@@ -74,11 +74,11 @@ class BlogController extends BaseController
 
         return $this->successResponse(
             payload: $this->resource($fetched),
-            message: $this->lang("fetch-success")
+            message: "fetch-success"
         );
     }
 
-    public function updateBlog(Request $request, int $id): JsonResponse
+    public function update(Request $request, int $id): JsonResponse
     {
         try {
             $blog = $this->repository->updateBlog($request, $id);
@@ -88,7 +88,7 @@ class BlogController extends BaseController
 
         return $this->successResponse(
             payload: $this->resource($blog),
-            message: $this->lang("update-success")
+            message: "update-success"
         );
     }
 
@@ -101,7 +101,7 @@ class BlogController extends BaseController
         }
 
         return $this->successResponseWithMessage(
-            message: $this->lang("delete-success")
+            message: "delete-success"
         );
     }
 }
