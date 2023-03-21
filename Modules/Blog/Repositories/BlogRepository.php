@@ -63,7 +63,6 @@ class BlogRepository extends BaseRepository
                 $img = Image::make($org_image);
                 $img->save("blogs/{$org_image}");
             }
-
             $data = [
                 "title" => $request->title,
                 "slug" => Str::slug($request->title),

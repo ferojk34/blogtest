@@ -43,8 +43,7 @@ class BlogController extends BaseController
 
         return $this->successResponse(
             payload: $this->collection($blogs),
-            message: "create-success",
-            response_code: Response::HTTP_CREATED
+            message: "fetch-success",
         );
     }
 
