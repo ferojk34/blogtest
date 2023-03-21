@@ -53,8 +53,12 @@ class BlogRepository extends BaseRepository
         try {
             $rule = ["title" => "required|unique:blogs,id,{$id}"];
             $this->validateData($request, $rule);
+            $blog = $this->fetch($id);
             $file = $request->file("image");
             if ($file) {
+                if(file_exists("blogs/{$blog->image}")) {
+                    @unlink("blogs/{$blog->image}");
+                }
                 $org_image = "image".mt_rand().time() . "." . $file->clientExtension();
                 $img = Image::make($org_image);
                 $img->save("blogs/{$org_image}");
